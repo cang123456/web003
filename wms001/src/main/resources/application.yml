@@ -1,0 +1,26 @@
+server:
+  port: 8090
+mybatis-plus:
+  global-config:
+    banner: false  # 关闭 MyBatis-Plus 启动 Logo
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/wms
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 123456
+  servlet:
+    multipart:
+      max-file-size: 10MB    # 单个文件的最大大小
+      max-request-size: 10MB # 单次请求的总文件大小上限
+# JWT 核心配置（必须添加）
+jwt:
+  # 密钥（必须是32位以上字符串，可随便写，生产环境要随机生成）
+  secret: abcdefghijklmnopqrstuvwxyz1234567890abcdef
+  # 过期时间（秒）：10小时 = 36000秒
+  expire-time: 36000
+## ??MyBatis-Plus?????? ??sql
+#mybatis-plus:
+#  configuration:
+#    map-underscore-to-camel-case: true # ?????????role_id ? roleId?
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # ??SQL????????

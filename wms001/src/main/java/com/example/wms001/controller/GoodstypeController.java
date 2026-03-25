@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * <p>
@@ -65,4 +66,10 @@ public class GoodstypeController {
         return Result.suc(result.getRecords(),result.getTotal());
     }
 
+
+    @GetMapping("/list")
+    public Result list() {
+        List list = goodstypeService.list();
+        return list.size()>0?Result.suc(list):Result.fail();
+    }
 }

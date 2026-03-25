@@ -7,8 +7,10 @@ import com.example.wms001.common.QueryQageParam;
 import com.example.wms001.common.Result;
 import com.example.wms001.entity.Goods;
 import com.example.wms001.service.IGoodsService;
+import com.example.wms001.service.IGoodstypeService;
 import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -24,7 +26,7 @@ import java.util.HashMap;
 @RestController
 @RequestMapping("/goods")
 public class GoodsController {
-    
+
     @Autowired
     private IGoodsService goodsService;
     //新增

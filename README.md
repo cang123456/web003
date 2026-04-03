@@ -295,7 +295,55 @@ nginx -s reload
 4. Nginx：nginx -t 配置正确，重启后无报错
 
 5. 前端：打开虚拟机IP（如192.168.139.128），能正常登录
-> （注：文档部分内容可能由 AI 生成）
+
+
+# 关于本地的虚拟机关机后，再次启动项目
+
+# 关机后重新启动项目完整步骤（极简笔记版，直接照着执行）
+## 前提
+打开VMware，启动你的CentOS7虚拟机，登录root账号
+
+---
+
+## 1. 启动MySQL服务（必须先开）
+```bash
+systemctl start mysqld
+```
+验证：`systemctl status mysqld` 显示running即可
+
+---
+
+## 2. 启动后端SpringBoot项目
+```bash
+# 后台启动jar包
+nohup java -jar /root/data/wms001-0.0.1-SNAPSHOT.jar > app.log 2>&1 &
+```
+验证：`tail -20 app.log` 看到`Started`即成功
+
+---
+
+## 3. 启动/重启Nginx（前端访问）
+```bash
+# 启动Nginx
+systemctl start nginx
+# 重载配置（修改过配置才用）
+nginx -s reload
+```
+
+---
+
+## 4. 验证项目是否正常
+浏览器输入虚拟机IP，直接登录即可
+
+---
+
+## 一键重启全套命令（复制直接跑）
+```bash
+systemctl start mysqld
+pkill -f java
+nohup java -jar /root/data/wms001-0.0.1-SNAPSHOT.jar > app.log 2>&1 &
+systemctl start nginx
+```
 
 
 

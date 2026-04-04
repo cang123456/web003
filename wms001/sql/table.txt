@@ -15,3 +15,15 @@ BEGIN;
 INSERT INTO `menu` VALUES (1, '001', '管理员管理', '1', NULL, 'Admin', '0', 'admin/AdminManage', 'el-icon-s-custom');
 INSERT INTO `menu` VALUES (2, '002', '用户管理', '1', NULL, 'User', '0,1', 'user/UserManage', 'el-icon-user-solid');
 COMMIT;
+
+DROP TABLE IF EXISTS `record`;
+CREATE TABLE `record` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `goods` int(11) NOT NULL COMMENT '货品id',
+  `userId` int(11) DEFAULT NULL COMMENT '取货人/补货人',
+  `admin_id` int(11) DEFAULT NULL COMMENT '操作人id',
+  `count` int(11) DEFAULT NULL COMMENT '数量',
+  `createtime` datetime DEFAULT NULL COMMENT '操作时间',
+  `remark` varchar(1000) DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;

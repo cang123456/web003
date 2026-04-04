@@ -25,7 +25,7 @@ public class JwtUtil {
     }
 
     // 生成Token（逻辑不变）
-    public String generateToken(String userId, Map<String, Object> claims) {
+    public String createToken(String userId, Map<String, Object> claims) {
         Date now = new Date();
         Date expireDate = new Date(now.getTime() + expireTime * 1000);
 

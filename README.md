@@ -65,3 +65,81 @@ Node.js (前端运行环境)<br>
 
 ![image-20260404225251103](note_img/image-20260404225251103.png)
 
+# 2026年4月6日 增加功能
+
+
+
+# add配置前后端JWT校验
+
+## 1 新建 Axios 拦截器文件（唯一新增文件）
+
+创建 src/utils/request.js：
+
+```
+import axios from 'axios'
+import { Message } from 'element-ui'
+import router from '@/router'
+
+const service = axios.create({
+  timeout: 5000
+})
+
+service.interceptors.request.use(
+  config => {
+    const token = sessionStorage.getItem('token')
+    if (token) {
+      config.headers['Authorization'] = 'Bearer ' + token
+    }
+    return config
+  },
+  error => {
+    return Promise.reject(error)
+  }
+)
+
+service.interceptors.response.use(
+  response => {
+    const res = response.data
+    
+    if (res.code === 401) {
+      Message.error('登录已过期，请重新登录')
+      sessionStorage.clear()
+      router.push('/')
+      return Promise.reject(new Error('未授权'))
+    }
+    
+    return response
+  },
+  error => {
+    if (error.response && error.response.status === 401) {
+      Message.error('未授权，请重新登录')
+      sessionStorage.clear()
+      router.push('/')
+    } else {
+      Message.error(error.message || '网络错误')
+    }
+    return Promise.reject(error)
+  }
+)
+
+export default service
+
+```
+
+add
+
+![image-20260406194010395](note_img/image-20260406194010395.png)
+
+add
+
+![image-20260406194156033](note_img/image-20260406194156033.png)
+
+add
+
+![image-20260406194417795](note_img/image-20260406194417795.png)
+
+add
+
+![image-20260406194506343](note_img/image-20260406194506343.png)
+
+

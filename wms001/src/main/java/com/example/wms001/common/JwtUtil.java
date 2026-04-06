@@ -28,7 +28,10 @@ public class JwtUtil {
     public String createToken(String userId, Map<String, Object> claims) {
         Date now = new Date();
         Date expireDate = new Date(now.getTime() + expireTime * 1000);
-
+//        让 claims 参数可选，如果为 null 则自动创建空 Map：
+        if (claims == null) {
+            claims = new java.util.HashMap<>();
+        }
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userId)

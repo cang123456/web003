@@ -4,6 +4,7 @@ package com.example.wms001.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.wms001.common.JwtUtil;
 import com.example.wms001.common.QueryQageParam;
 import com.example.wms001.common.Result;
 import com.example.wms001.entity.User;
@@ -44,7 +45,8 @@ public class UserController {
     private IUserService userService;
     @Autowired
     private IMenuService menuService;
-
+    @Autowired
+    private  com.example.wms001.common.JwtUtil jwtUtil;
     @GetMapping("/list")
     public List<User> list() {
         return  userService.list();
@@ -155,6 +157,10 @@ public class UserController {
                     .list();
             HashMap res = new HashMap();
             res.put("user",user1);
+
+            String token = jwtUtil.createToken(user1.getId().toString(), null);
+            res.put("token", token);
+
             res.put("menuList",menuList);
             return Result.suc(res);
         }

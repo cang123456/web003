@@ -8,6 +8,9 @@ import com.example.wms001.entity.Goods;
 import com.example.wms001.entity.Goodstype;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 /**
  * <p>
@@ -19,6 +22,9 @@ import org.apache.ibatis.annotations.Param;
  */
 @Mapper
 public interface GoodsMapper extends BaseMapper<Goods> {
+
+//    @Select("select id from goods")
+//    public List<Goods> list();
 
     IPage pageCC(IPage<Goods> page, @Param(Constants.WRAPPER) Wrapper<Goods> wrapper);
 }

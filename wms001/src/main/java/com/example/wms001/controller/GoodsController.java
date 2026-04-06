@@ -51,7 +51,7 @@ public class GoodsController {
     public Result listPage(@RequestBody QueryQageParam query) {
         HashMap param = query.getParam();
         String name = (String)param.get("name");
-        String goodstype = String.valueOf(param.get("goodstype"));
+        String goodstype = String.valueOf(param.get("goodsType"));
         String storage = String.valueOf(param.get("storage"));
 
         Page<Goods> page = new Page<>();

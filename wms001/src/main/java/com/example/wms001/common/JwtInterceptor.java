@@ -1,6 +1,7 @@
 package com.example.wms001.common;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import jakarta.servlet.http.HttpServletRequest; // 关键：jakarta而非javax
@@ -11,16 +12,18 @@ public class JwtInterceptor implements HandlerInterceptor {
     @Autowired
     private JwtUtil jwtUtil; // 注入common包的JwtUtil
 
+    @Value("${jwt.header}")
+    private static String Header;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         // 排除登录接口
         String requestURI = request.getRequestURI();
-        if (requestURI.contains("/user/login") || 1==1) {// 测试加上   || 1==1
+        if (requestURI.contains("/user/login")) {// 测试加上   || 1==1
             return true;
         }
 
         // 获取Token
-        String token = request.getHeader("Authorization");
+        String token = request.getHeader(Header);
         if (token == null || !token.startsWith("Bearer ")) {
             throw new RuntimeException("请先登录");
         }

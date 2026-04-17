@@ -250,7 +250,7 @@ public class UserController {
         lambdaQueryWrapper.like(User::getName,name);
         IPage result = userService.pageCC(page, lambdaQueryWrapper);
 
-        System.out.println("total==="+result.getTotal());
+//        System.out.println("total==="+result.getTotal());
 
         return result.getRecords();
     }

@@ -16,9 +16,10 @@ spring:
 # JWT 核心配置（必须添加）
 jwt:
   # 密钥（必须是32位以上字符串，可随便写，生产环境要随机生成）
-  secret: abcdefghijklmnopqrstuvwxyz1234567890abcdef
-  # 过期时间（秒）：10小时 = 36000秒
-  expire-time: 36000
+  secret: aB3k9sT2pR7xZ8qL5dG1jH6mN4cF0vS2eW
+  # 过期时间（秒）：2小时 = 7200秒
+  expire-time: 7200
+  header: Token
 ## ??MyBatis-Plus?????? ??sql
 #mybatis-plus:
 #  configuration:

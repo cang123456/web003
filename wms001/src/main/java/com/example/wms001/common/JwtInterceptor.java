@@ -15,7 +15,7 @@ public class JwtInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         // 排除登录接口
         String requestURI = request.getRequestURI();
-        if (requestURI.contains("/user/")  || requestURI.contains("/menu") || 1==1) {
+        if (requestURI.contains("/user/login") || 1==1) {// 测试加上   || 1==1
             return true;
         }
 

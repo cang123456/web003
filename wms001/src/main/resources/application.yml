@@ -24,3 +24,5 @@ jwt:
 #  configuration:
 #    map-underscore-to-camel-case: true # ?????????role_id ? roleId?
 #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # ??SQL????????
+local_things:
+  uploadDir: D:\project\wms\web002-main\note_img

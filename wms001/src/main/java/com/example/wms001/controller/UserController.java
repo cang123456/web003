@@ -4,6 +4,7 @@ package com.example.wms001.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.wms001.VO.UserVO;
 import com.example.wms001.common.JwtUtil;
 import com.example.wms001.common.QueryQageParam;
 import com.example.wms001.common.Result;
@@ -12,7 +13,12 @@ import com.example.wms001.entity.Menu;
 import com.example.wms001.service.IMenuService;
 import com.example.wms001.service.IUserService;
 import io.micrometer.common.util.StringUtils;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -28,6 +34,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -39,8 +46,13 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/user")
+@Slf4j
 public class UserController {
 
+    @Value("${local_things.uploadDir}")
+    private static String uploadDir;
+    // 上传/下载的根目录（建议和上传接口保持一致，可从配置文件注入）
+    private static String UPLOAD_DIR = uploadDir;
     @Autowired
     private IUserService userService;
     @Autowired
@@ -49,6 +61,7 @@ public class UserController {
     private  com.example.wms001.common.JwtUtil jwtUtil;
     @GetMapping("/list")
     public List<User> list() {
+        log.info("list");
         return  userService.list();
     }
 
@@ -57,12 +70,12 @@ public class UserController {
     // 文件上传和下载 multipartfile byte数组获取比特流
     @PostMapping("/upload")
     public String handleFileUpload(@RequestParam("file") MultipartFile file) {
+        log.info("handleFileUpload");
         if (file.isEmpty()) {
             return "Please select a file to upload.";
         }
         try {
             byte[] bytes = file.getBytes();
-            String uploadDir = "D:\\project\\wms\\web002-main\\wms001\\file_upload_download\\";
             File uploadedFile = new File(uploadDir + file.getOriginalFilename());
             file.transferTo(uploadedFile);
             return "File uploaded successfully!";
@@ -71,8 +84,7 @@ public class UserController {
             return "File upload failed!";
         }
     }
-    // 上传/下载的根目录（建议和上传接口保持一致，可从配置文件注入）
-    private static final String UPLOAD_DIR = "D:\\project\\wms\\web002-main\\wms001\\file_upload_download\\";
+
     /**
      * 文件下载接口
      * @param fileName 要下载的文件名（前端传入，需和上传时的文件名一致）
@@ -80,6 +92,7 @@ public class UserController {
      */
     @GetMapping("/download")
     public ResponseEntity<byte[]> downloadFile(@RequestParam("fileName") String fileName) {
+        log.info("downloadFile");
         // 1. 构建要下载的文件完整路径
         File downloadFile = new File(UPLOAD_DIR, fileName);
 
@@ -121,31 +134,37 @@ public class UserController {
     //新增
     @PostMapping("/save")
     public Result save(@RequestBody User user) {
+        log.info("新增save");
         return  userService.save(user)?Result.suc():Result.fail();
     }
     //修改
     @PostMapping("/update")
     public Result update(@RequestBody User user) {
+        log.info("修改update {}",user);
         return  userService.updateById(user)?Result.suc():Result.fail();
     }
     //修改
     @PostMapping("/mod")
     public boolean mod(@RequestBody User user) {
+        log.info("修改mod {}",user);
         return  userService.updateById(user);
     }
     //新增或者修改
     @PostMapping("/saveOrMod")
     public boolean saveOrMod(@RequestBody User user) {
+        log.info("新增或者修改saveOrMod {}",user);
         return  userService.saveOrUpdate(user);
     }
     //删除
     @GetMapping("/delete")
     public Result delete(Integer id) {
+        log.info("delete {}",id);
         return  userService.removeById(id)?Result.suc():Result.fail();
     }
     //登录
     @PostMapping("/login")
     public Result login(@RequestBody User user) {
+        log.info("登录login {}",user);
         List list = userService.lambdaQuery()
                 .eq(User::getNo,user.getNo())
                 .eq(User::getPassword,user.getPassword())
@@ -169,6 +188,7 @@ public class UserController {
     //查询 （模糊，匹配）
     @PostMapping("/listP")
     public Result listP(@RequestBody User user) {
+        log.info("分页查询listP {}",user);
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
         if(StringUtils.isNotBlank(user.getName())){
             queryWrapper.like(User::getName, user.getName());
@@ -178,6 +198,7 @@ public class UserController {
     }
     @GetMapping("/findByNo")
     public Result checkDuplicate(@RequestParam String no) {
+        log.info("findByNo {}",no);
 //        System.out.println("no==="+no);
         List list = userService.lambdaQuery().eq(User::getNo,no).list();
 //        System.out.println(list.size());
@@ -186,8 +207,9 @@ public class UserController {
 
     @PostMapping("/listPage")
     public List<User> listPage(@RequestBody QueryQageParam query) {
-        System.out.println("num==="+query.getPageNum());
-        System.out.println("size==="+query.getPageSize());
+        log.info("分页查询listPage {} num=== {} size=== {}",query,query.getPageNum(),query.getPageSize());
+//        System.out.println("num==="+query.getPageNum());
+//        System.out.println("size==="+query.getPageSize());
         HashMap param = query.getParam();
 
         String name = param.get("name").toString();
@@ -206,13 +228,14 @@ public class UserController {
 
         IPage result = userService.page(page, lambdaQueryWrapper);
 
-        System.out.println("total==="+result.getTotal());
+//        System.out.println("total==="+result.getTotal());
 
         return result.getRecords();
     }
 
     @PostMapping("/listPageC")
     public List<User> listPageC(@RequestBody QueryQageParam query) {
+        log.info("分页查询listPageC {} num=== {} size=== {}",query,query.getPageNum(),query.getPageSize());
 //        System.out.println("num==="+query.getPageNum());
 //        System.out.println("size==="+query.getPageSize());
         HashMap param = query.getParam();
@@ -233,6 +256,7 @@ public class UserController {
     }
     @PostMapping("/listPageC1")
     public Result listPageC1(@RequestBody QueryQageParam query) {
+        log.info("分页查询listPageC1 {}",query);
         HashMap param = query.getParam();
         String name = (String)param.get("name");
         String sex = (String)param.get("sex");
@@ -257,7 +281,14 @@ public class UserController {
 
 //        System.out.println("total==="+result.getTotal());
 
-        return Result.suc(result.getRecords(),result.getTotal());
+        List userVOS = result.getRecords().stream()
+            .map(user->{
+            UserVO userVO = new UserVO();
+            BeanUtils.copyProperties(user,userVO);
+            return userVO;
+        }).toList();
+
+        return Result.suc(userVOS,result.getTotal());
     }
 
 }

@@ -13,7 +13,7 @@ public class JwtInterceptor implements HandlerInterceptor {
     private JwtUtil jwtUtil; // 注入common包的JwtUtil
 
     @Value("${jwt.header}")
-    private static String Header;
+    private String Header;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         // 排除登录接口
@@ -21,12 +21,25 @@ public class JwtInterceptor implements HandlerInterceptor {
         if (requestURI.contains("/user/login")) {// 测试加上   || 1==1
             return true;
         }
+        // 放行OPTIONS预检请求
+        if (request.getMethod().equals("OPTIONS")) {
+            response.setStatus(HttpServletResponse.SC_OK);
+            return true;
+        }
+
+        // 2. 放行 Knife4j 接口文档（关键！）
+        if (requestURI.contains("/doc.html")
+                || requestURI.contains("/webjars/")
+                || requestURI.contains("/v3/api-docs")) {
+            return true;
+        }
 
         // 获取Token
         String token = request.getHeader(Header);
-        if (token == null || !token.startsWith("Bearer ")) {
+        if (token == null) {
             throw new RuntimeException("请先登录");
         }
+
         token = token.replace("Bearer ", "");
 
         // 验证Token

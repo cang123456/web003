@@ -19,7 +19,7 @@ jwt:
   secret: aB3k9sT2pR7xZ8qL5dG1jH6mN4cF0vS2eW
   # 过期时间（秒）：2小时 = 7200秒
   expire-time: 7200
-  header: Token
+  header: token
 ## ??MyBatis-Plus?????? ??sql
 #mybatis-plus:
 #  configuration:
@@ -27,3 +27,16 @@ jwt:
 #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # ??SQL????????
 local_things:
   uploadDir: D:\project\wms\web002-main\note_img
+
+knife4j:
+  enable: true
+  # 文档标题
+  title: WMS 系统接口文档
+  # 文档描述
+  description: 仓库管理系统 API 文档
+  # 版本
+  version: 1.0.0
+  # 联系人
+  contact:
+    name: 开发团队
+    email: dev@example.com
